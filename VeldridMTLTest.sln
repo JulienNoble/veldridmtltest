@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeldridMTLTest", "VeldridMTLTest\VeldridMTLTest.csproj", "{62F2BBDF-5305-4D71-9E43-49627B501948}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhone = Debug|iPhone
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Debug|iPhone.Build.0 = Debug|iPhone
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Debug|iPhone.Deploy.0 = Debug|iPhone
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Debug|iPhoneSimulator.Deploy.0 = Debug|iPhoneSimulator
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Release|iPhone.ActiveCfg = Release|iPhone
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Release|iPhone.Build.0 = Release|iPhone
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Release|iPhone.Deploy.0 = Release|iPhone
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{62F2BBDF-5305-4D71-9E43-49627B501948}.Release|iPhoneSimulator.Deploy.0 = Release|iPhoneSimulator
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5C2F25DD-A9EE-4F46-B181-D9BE976F83E4}
+	EndGlobalSection
+EndGlobal
