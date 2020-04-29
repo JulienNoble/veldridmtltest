@@ -5,7 +5,6 @@ using System.Numerics;
 using System.Text;
 using UIKit;
 using Veldrid;
-using Veldrid.Utilities;
 
 namespace VeldridMTLTest
 {
@@ -19,7 +18,7 @@ namespace VeldridMTLTest
 
         private GraphicsDevice graphicsDevice;
         private Swapchain swapchain;
-        private DisposeCollectorResourceFactory factory;
+        private ResourceFactory factory;
 
         private Texture renderTargetColorTexture;
         private TextureView renderTargetColorTextureView;
@@ -42,13 +41,7 @@ namespace VeldridMTLTest
             View.BackgroundColor = UIColor.SystemPinkColor;
 
             // device init
-            GraphicsDeviceOptions options = new GraphicsDeviceOptions(
-                debug: false,
-                swapchainDepthFormat: PixelFormat.R16_UNorm,
-                syncToVerticalBlank: true,
-                resourceBindingModel: ResourceBindingModel.Improved,
-                preferDepthRangeZeroToOne: true,
-                preferStandardClipSpaceYDirection: true);
+            GraphicsDeviceOptions options = new GraphicsDeviceOptions(false, null, false, ResourceBindingModel.Improved);
 #if DEBUG
             options.Debug = true;
 #endif
@@ -56,12 +49,12 @@ namespace VeldridMTLTest
             SwapchainDescription scd = new SwapchainDescription(
                 ss,
                 width, height,
-                PixelFormat.R16_UNorm,
+                PixelFormat.R32_Float,
                 false);
 
-            graphicsDevice = GraphicsDevice.CreateMetal(options, scd);
-            swapchain = graphicsDevice.MainSwapchain;
-            factory = new DisposeCollectorResourceFactory(graphicsDevice.ResourceFactory);
+            graphicsDevice = GraphicsDevice.CreateMetal(options);
+            swapchain = graphicsDevice.ResourceFactory.CreateSwapchain(ref scd);
+            factory = graphicsDevice.ResourceFactory;
 
             // resource init
             CreateSizeDependentResources();
@@ -82,7 +75,7 @@ namespace VeldridMTLTest
                 2
             };
             vertexBuffer = factory.CreateBuffer(new BufferDescription(4 * VertexPosition.SizeInBytes, BufferUsage.VertexBuffer));
-            indexBuffer = factory.CreateBuffer(new BufferDescription(6 * sizeof(uint), BufferUsage.IndexBuffer)); 
+            indexBuffer = factory.CreateBuffer(new BufferDescription(6 * sizeof(uint), BufferUsage.IndexBuffer));
             graphicsDevice.UpdateBuffer(vertexBuffer, 0, quadVertices);
             graphicsDevice.UpdateBuffer(indexBuffer, 0, quadIndices);
 
@@ -111,9 +104,9 @@ namespace VeldridMTLTest
                 commandList.ClearColorTarget(0, RgbaFloat.Green);
 
                 commandList.SetPipeline(pipeline);
-                commandList.SetGraphicsResourceSet(0, resourceSet);
                 commandList.SetVertexBuffer(0, vertexBuffer);
                 commandList.SetIndexBuffer(indexBuffer, IndexFormat.UInt32);
+                commandList.SetGraphicsResourceSet(0, resourceSet);
 
                 commandList.DrawIndexed(
                     indexCount: 6,
@@ -152,7 +145,7 @@ namespace VeldridMTLTest
                 PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.RenderTarget | TextureUsage.Sampled));
             renderTargetColorTextureView = factory.CreateTextureView(renderTargetColorTexture);
             renderTargetDepthTexture = factory.CreateTexture(TextureDescription.Texture2D(
-                width, height, 1, 1, PixelFormat.R16_UNorm, TextureUsage.DepthStencil));
+                width, height, 1, 1, PixelFormat.R32_Float, TextureUsage.DepthStencil));
             renderTargetFramebuffer = factory.CreateFramebuffer(new FramebufferDescription(renderTargetDepthTexture, renderTargetColorTexture));
 
             // final render pipeline
@@ -164,21 +157,21 @@ namespace VeldridMTLTest
             BindableResource[] bindableResources = new BindableResource[]
             {
                 renderTargetColorTextureView,
-                graphicsDevice.LinearSampler,
+                graphicsDevice.PointSampler,
             };
             resourceLayout = factory.CreateResourceLayout(new ResourceLayoutDescription(layoutDescriptions));
             pipeline = factory.CreateGraphicsPipeline(
                 new GraphicsPipelineDescription(
                     BlendStateDescription.SingleOverrideBlend,
                     new DepthStencilStateDescription(
-                        depthTestEnabled: true,
+                        depthTestEnabled: false,
                         depthWriteEnabled: false,
                         comparisonKind: ComparisonKind.Always),
                     new RasterizerStateDescription(
                         cullMode: FaceCullMode.Back,
                         fillMode: PolygonFillMode.Solid,
                         frontFace: FrontFace.Clockwise,
-                        depthClipEnabled: true,
+                        depthClipEnabled: false,
                         scissorTestEnabled: false),
                     PrimitiveTopology.TriangleList,
                     new ShaderSetDescription(
